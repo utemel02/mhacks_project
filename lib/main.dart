@@ -36,6 +36,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var selectedid = "";
+    var location = 0;
     return Scaffold(
       appBar: AppBar(
         title: const Text("BLE SCANNER"),
@@ -59,12 +61,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: ListView.builder(
                             shrinkWrap: true,
                             // itemCount: snapshot.data!.length,
-                                itemCount: controller.devicesList!.length,
+                                itemCount: selectedid == "" ? controller.devicesList!.length : 1,
                             itemBuilder: (context, index) {
                               // final data = snapshot.data![index];
-                              final data = controller.devicesList![index];
+                              final data = selectedid == "" ? controller.devicesList![index] : controller.devicesList![location];
                               return GestureDetector(
-                                  onTap:() => print("Gottem:${Text(data.device.id.id)}"),
+                                // Only want to create card that matches selected device id
+                                // And create new list view every time button is pressed
+                                //   onTap:() => print("Gottem:${Text(data.device.id.id)}"),
+                                onTap:() {
+                                  selectedid = data.device.id.id.toString();
+                                  print("New selected:${selectedid}");
+                                  location = controller.devicesList.indexWhere((device) => device.device.id.id == data.device.id.id);
+                                },
                                   child: Card(
                                     elevation: 2,
                                     child: ListTile(

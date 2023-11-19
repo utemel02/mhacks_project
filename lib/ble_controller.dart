@@ -52,6 +52,8 @@ class BleController extends GetxController{
         for (ScanResult result in results) {
           if (!devicesList.any((device) => device.device.id == result.device.id)) {
             devicesList.add(result);
+          } else {
+            devicesList = devicesList.map((device) => device.device.id == result.device.id ? result : device).toList();
           }
         }
         devicesList.sort((a, b) => a.device.id.toString().compareTo(b.device.id.toString()));
