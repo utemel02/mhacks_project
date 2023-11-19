@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 class BleController extends GetxController{
 
   FlutterBlue flutterBlue = FlutterBlue.instance;
+  // Add in classic scanning as well
 
   // Future scanDevices() async{
   //   var blePermission = await Permission.bluetoothScan.status;
@@ -27,7 +28,7 @@ class BleController extends GetxController{
   //   // }
   // }
   List<ScanResult> devicesList = [];
-  Future scanDevices() async {
+  Future scanDevices(targetDevice) async {
     var blePermission = await Permission.bluetoothScan.status;
     if(blePermission.isDenied){
       if(await Permission.bluetoothScan.request().isGranted){
@@ -43,7 +44,8 @@ class BleController extends GetxController{
               print('Device Id: ${result.device.id}');
             }
           });
-          flutterBlue.startScan(timeout: const Duration(seconds: 10));
+          // If I can just scan until specific device is found, that would be epic
+          flutterBlue.startScan(timeout: const Duration(seconds: 5));
           flutterBlue.stopScan();
         }
       }
@@ -57,13 +59,19 @@ class BleController extends GetxController{
           }
         }
         devicesList.sort((a, b) => a.device.id.toString().compareTo(b.device.id.toString()));
-        for (ScanResult result in devicesList) {
-          print('Device Id: ${result.device.id}');
-        }
+        // for (ScanResult result in devicesList) {
+        //   // print('Device Id: ${result.device.id}');
+        //   // if (targetDevice != "" && targetDevice == result.device.id.toString()) {
+        //   //   print("YESSS FOUND DEVICE: ${result.device.id.toString()}, rssi: ${result.rssi}");
+        //   // }
+        // }
+        print("NUMBER OF DEVICES:${devicesList.length}");
       });
       flutterBlue.startScan(timeout: const Duration(seconds: 10));
       flutterBlue.stopScan();
     }
+    // scanDevices();
   }
   Stream<List<ScanResult>> get scanResults => flutterBlue.scanResults;
+
 }

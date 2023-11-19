@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mhacks_project/ble_controller.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -34,10 +36,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var selectedid = "";
+  var location = 0;
+
   @override
   Widget build(BuildContext context) {
-    var selectedid = "";
-    var location = 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("BLE SCANNER"),
@@ -46,6 +50,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: GetBuilder<BleController>(
         init: BleController(),
         builder: (controller) {
+          if (selectedid == "") {
+            const timeout = Duration(seconds:10);
+            Timer.periodic(timeout, (Timer t) => controller.scanDevices(selectedid));
+          }
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -64,15 +72,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                 itemCount: selectedid == "" ? controller.devicesList!.length : 1,
                             itemBuilder: (context, index) {
                               // final data = snapshot.data![index];
-                              final data = selectedid == "" ? controller.devicesList![index] : controller.devicesList![location];
+                              final data = selectedid == "" ? controller.devicesList![index] : controller.devicesList![controller.devicesList.indexWhere((device) => device.device.id.id.toString() == selectedid)];
                               return GestureDetector(
                                 // Only want to create card that matches selected device id
                                 // And create new list view every time button is pressed
                                 //   onTap:() => print("Gottem:${Text(data.device.id.id)}"),
                                 onTap:() {
                                   selectedid = data.device.id.id.toString();
-                                  print("New selected:${selectedid}");
-                                  location = controller.devicesList.indexWhere((device) => device.device.id.id == data.device.id.id);
+                                  print("New selected:$selectedid");
+                                  // location = controller.devicesList.indexWhere((device) => device.device.id.id == data.device.id.id);
+                                  controller.scanDevices(selectedid);
                                 },
                                   child: Card(
                                     elevation: 2,
@@ -96,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         return const Center(child: Text("No Device Found"),);
                       }
                     }),
-                ElevatedButton(onPressed: () =>controller.scanDevices(), child: const Text("Scan")),
+                ElevatedButton(onPressed: () =>controller.scanDevices(selectedid), child: const Text("Scan")),
                 const SizedBox(
                   height: 15,
                 ),

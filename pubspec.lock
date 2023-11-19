@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  bluetooth_classic:
+    dependency: "direct main"
+    description:
+      name: bluetooth_classic
+      sha256: "0c73a487517b69acb90e2f1c9a21b563fb11771aa1a41ad0fe7d5563b5fb2877"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -298,4 +306,4 @@ packages:
     version: "0.3.0"
 sdks:
   dart: ">=3.2.0-194.0.dev <4.0.0"
-  flutter: ">=2.8.0"
+  flutter: ">=3.3.0"
