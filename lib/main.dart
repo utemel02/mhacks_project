@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mhacks_project/ble_controller.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: ListTile(
                                   title: Text(data.device.name),
                                   subtitle: Text(data.device.id.id),
-                                  trailing: Text(data.rssi.toString()),
+                                  trailing: Text("${(pow(10, ((-56 - data.rssi) / (10*2))) * 3.2808).toStringAsFixed(2)} ft"),
                                 ),
                               );
                             });
